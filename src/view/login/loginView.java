@@ -4,6 +4,7 @@
  */
 package view.login;
 
+import functions.HashFactory;
 import functions.UserFunctions;
 import javax.swing.JOptionPane;
 import model.User;
@@ -171,11 +172,11 @@ public class loginView extends javax.swing.JFrame {
         User user = new User();
         boolean result;
         
-        user.setEmail(tfEmail.getText());
-        user.setPass(String.valueOf(tfPassword.getPassword()));
-        
-        if (!user.getEmail().equals("") || !user.getPass().equals("")) {
+        if (!tfEmail.getText().equals("") || !String.valueOf(tfPassword.getPassword()).equals("")) {
             // se for diferente de ""
+            user.setEmail(tfEmail.getText());
+            user.setPass(new HashFactory().getSHA256Hash(String.valueOf(tfPassword.getPassword())));
+            
             result = new UserFunctions().chkUser(user.getEmail(), user.getPass());
             if (result) {
                 login2FA_view f = new login2FA_view(user.getEmail());

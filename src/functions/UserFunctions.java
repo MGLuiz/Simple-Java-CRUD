@@ -67,11 +67,10 @@ public class UserFunctions {
         }
     }
     
-    public boolean chkUser(String e, String p){
-        String emailToValid = "luizmiguelxavierdebrito@faacgedu.org.br";
-        String passToValid = "123188";
+    public boolean chkUser(String emailToValid, String passToValid){
+        User u = selectUserByEmail(emailToValid);
         
-        return e.equals(emailToValid) && p.equals(passToValid);
+        return u.getPass().equals(passToValid);
     }
     
     public String getValidationKey(){

@@ -29,9 +29,11 @@ public class login2FA_view extends javax.swing.JFrame {
         jTextArea1.setText( """
                             Para efetuar o login, confime o c\u00f3digo de 
                             valida\u00e7\u00e3o enviado no seu no seu email.
-                            Email:"""+ emailToValid);
+                            Email:"""+ " "+emailToValid);
         
         key = new UserFunctions().getValidationKey();
+        
+        sendMail();
     }
 
     /**
@@ -51,7 +53,6 @@ public class login2FA_view extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         tfValidationKey = new javax.swing.JTextField();
-        btnSendKey = new javax.swing.JButton();
         btnValidar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -94,17 +95,6 @@ public class login2FA_view extends javax.swing.JFrame {
             }
         });
 
-        btnSendKey.setBackground(new java.awt.Color(51, 51, 51));
-        btnSendKey.setFont(new java.awt.Font("Segoe UI", 0, 25)); // NOI18N
-        btnSendKey.setForeground(new java.awt.Color(255, 255, 255));
-        btnSendKey.setText("Enviar Código");
-        btnSendKey.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnSendKey.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSendKeyActionPerformed(evt);
-            }
-        });
-
         btnValidar.setBackground(new java.awt.Color(51, 51, 51));
         btnValidar.setFont(new java.awt.Font("Segoe UI", 0, 25)); // NOI18N
         btnValidar.setForeground(new java.awt.Color(255, 255, 255));
@@ -121,34 +111,29 @@ public class login2FA_view extends javax.swing.JFrame {
         pnlBodyLayout.setHorizontalGroup(
             pnlBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlBodyLayout.createSequentialGroup()
-                .addGroup(pnlBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlBodyLayout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addComponent(jScrollPane1)
-                        .addGap(18, 18, 18)
-                        .addComponent(tfValidationKey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlBodyLayout.createSequentialGroup()
-                        .addGap(209, 209, 209)
-                        .addComponent(btnSendKey)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnValidar)))
+                .addGap(24, 24, 24)
+                .addComponent(jScrollPane1)
+                .addGap(18, 18, 18)
+                .addComponent(tfValidationKey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28))
+            .addGroup(pnlBodyLayout.createSequentialGroup()
+                .addGap(217, 217, 217)
+                .addComponent(btnValidar, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlBodyLayout.setVerticalGroup(
             pnlBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlBodyLayout.createSequentialGroup()
-                .addContainerGap(67, Short.MAX_VALUE)
+                .addContainerGap(76, Short.MAX_VALUE)
                 .addGroup(pnlBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlBodyLayout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(60, 60, 60))
+                        .addGap(45, 45, 45))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlBodyLayout.createSequentialGroup()
                         .addComponent(tfValidationKey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(99, 99, 99)))
-                .addGroup(pnlBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnValidar)
-                    .addComponent(btnSendKey))
-                .addGap(89, 89, 89))
+                        .addGap(84, 84, 84)))
+                .addComponent(btnValidar)
+                .addGap(95, 95, 95))
         );
 
         pnlRoot.add(pnlBody, java.awt.BorderLayout.CENTER);
@@ -177,24 +162,28 @@ public class login2FA_view extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnSendKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendKeyActionPerformed
+    
+    private void sendMail(){
         try {
-            new MailSender().sendKeyMail(emailToValid, key);
-            JOptionPane.showMessageDialog(null, "Código enviado ao email: "+emailToValid);
+            new MailSender().sendKeyMail(this.emailToValid, this.key);
+            JOptionPane.showMessageDialog(null, "Código enviado ao email: "+this.emailToValid);
         } catch (MessagingException ex) {
             JOptionPane.showMessageDialog(null, "Não foi possivel enviar email, tente novamente. Erro: "+ex);
             new loginView().setVisible(true);
             dispose();
         }
-    }//GEN-LAST:event_btnSendKeyActionPerformed
-
+    }
+    
     private void btnValidarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidarActionPerformed
         String tfKey = tfValidationKey.getText();
         
         if (!tfKey.equals("")) {
-            if (!tfKey.equals(key)) {
+            if (tfKey.equals(key)) {
                 JOptionPane.showMessageDialog(null, "Login feito com sucesso!", "", JOptionPane.INFORMATION_MESSAGE);
+                new view.home.UserInfosView().setVisible(true);
+                dispose();
+            }else{
+                JOptionPane.showMessageDialog(null, "Código de validação incorreto!", "", JOptionPane.ERROR_MESSAGE);
             }
         }else{
             JOptionPane.showMessageDialog(null, "Não deixe o campo vazio!", "", JOptionPane.INFORMATION_MESSAGE);
@@ -242,7 +231,6 @@ public class login2FA_view extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnSendKey;
     private javax.swing.JButton btnValidar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;

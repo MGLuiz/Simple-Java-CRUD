@@ -2,18 +2,11 @@
 # Project specific excludes
 #
 
-tomcat
-
-#
-# Default excludes
-#
-
 # Binaries
 *.7z
 *.dmg
 *.gz
 *.iso
-*.jar
 *.rar
 *.tar
 *.zip
@@ -25,18 +18,7 @@ tomcat
 # Maven 
 target/
 
-# IntelliJ project files 
-*.iml
-*.iws
-*.ipr
-.idea/
-
-# eclipse project file
-.settings/
-.classpath
-.project
-
-# NetBeans specific
+# NetBeans
 nbproject/private/
 build/
 nbbuild/
